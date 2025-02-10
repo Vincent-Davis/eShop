@@ -22,7 +22,6 @@
         <tr th:each="product: ${products}">
             <td th:text="${product.productName}"></td>
             <td th:text="${product.productQuantity}"></td>
-            <td th:text="${product.productId}"></td>
             <td>
                 <!-- Tombol Edit -->
                 <a th:href="@{'/product/edit/' + ${product.productId}}" class="btn btn-warning btn-sm">Edit</a>
