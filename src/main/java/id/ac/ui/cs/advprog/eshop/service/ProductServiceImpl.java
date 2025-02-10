@@ -56,4 +56,17 @@ public class ProductServiceImpl implements ProductService {
             }
         }
     }
+    @Override
+    public void deleteById(String id) {
+        Iterator<Product> productIterator = productRepository.findAll();
+
+        while (productIterator.hasNext()) {
+            Product product = productIterator.next();
+            if (product.getProductId().equals(id)) {
+                productIterator.remove(); // Hapus produk dari daftar
+                break;
+            }
+        }
+    }
+
 }
