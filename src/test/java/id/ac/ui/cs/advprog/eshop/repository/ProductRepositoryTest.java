@@ -20,6 +20,7 @@ class ProductRepositoryTest {
 
     @BeforeEach
     void setUp() {
+        productRepository = new ProductRepository();
     }
 
     @Test
@@ -67,5 +68,73 @@ class ProductRepositoryTest {
         assertEquals(product2.getProductId(), savedProduct.getProductId());
 
         assertFalse(productIterator.hasNext());
+    }
+
+    @Test
+    void testEditProduct_Success() {
+        // Arrange: Buat dan simpan produk awal
+        Product product = new Product();
+        product.setProductId("123");
+        product.setProductName("Sampo Lama");
+        product.setProductQuantity(100);
+        productRepository.create(product);
+
+        // Act: Edit produk
+        Product updatedProduct = new Product();
+        updatedProduct.setProductId("123");
+        updatedProduct.setProductName("Sampo Baru");
+        updatedProduct.setProductQuantity(150);
+        productRepository.update(updatedProduct);
+
+        // Assert: Pastikan perubahan berhasil
+        Product retrievedProduct = productRepository.findById("123");
+        assertNotNull(retrievedProduct);
+        assertEquals("Sampo Baru", retrievedProduct.getProductName());
+        assertEquals(150, retrievedProduct.getProductQuantity());
+    }
+
+    @Test
+    void testEditProduct_Fail_ProductNotFound() {
+        // Arrange: Buat produk yang tidak ada di repository
+        Product product = new Product();
+        product.setProductId("999");
+        product.setProductName("Produk Tidak Ada");
+        product.setProductQuantity(200);
+
+        // Act: Coba update produk yang tidak ada
+        productRepository.update(product);
+
+        // Assert: Produk tetap tidak ada di repository
+        Product retrievedProduct = productRepository.findById("999");
+        assertNull(retrievedProduct);
+    }
+
+    @Test
+    void testDeleteProduct_Success() {
+        // Arrange: Buat dan simpan produk
+        Product product = new Product();
+        product.setProductId("456");
+        product.setProductName("Sampo Cap");
+        product.setProductQuantity(200);
+        productRepository.create(product);
+
+        // Act: Hapus produk
+        productRepository.deleteById("456");
+
+        // Assert: Produk harus hilang dari repository
+        Product deletedProduct = productRepository.findById("456");
+        assertNull(deletedProduct);
+    }
+
+    @Test
+    void testDeleteProduct_Fail_ProductNotFound() {
+        // Arrange: Pastikan repository awalnya kosong
+        assertFalse(productRepository.findAll().hasNext());
+
+        // Act: Coba hapus produk yang tidak ada
+        productRepository.deleteById("999");
+
+        // Assert: Repository tetap kosong
+        assertFalse(productRepository.findAll().hasNext());
     }
 }
