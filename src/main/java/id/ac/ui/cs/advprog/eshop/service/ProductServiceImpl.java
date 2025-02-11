@@ -31,42 +31,17 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product findById(String id) {
-        Iterator<Product> productIterator = productRepository.findAll(); // Dapatkan iterator
-
-        while (productIterator.hasNext()) { // Looping melalui iterator
-            Product product = productIterator.next();
-            if (product.getProductId().equals(id)) {
-                return product; // Jika ketemu, langsung return
-            }
-        }
-
-        return null; // Jika tidak ditemukan, return null
+        return productRepository.findById(id);
     }
-
 
     @Override
     public void update(Product product) {
-        List<Product> allProducts = new ArrayList<>();
-        productRepository.findAll().forEachRemaining(allProducts::add);
-
-        for (Product p : allProducts) {
-            if (p.getProductId().equals(product.getProductId())) {
-                p.setProductName(product.getProductName());
-                p.setProductQuantity(product.getProductQuantity());
-            }
-        }
+        productRepository.update(product);
     }
+
     @Override
     public void deleteById(String id) {
-        Iterator<Product> productIterator = productRepository.findAll();
-
-        while (productIterator.hasNext()) {
-            Product product = productIterator.next();
-            if (product.getProductId().equals(id)) {
-                productIterator.remove(); // Hapus produk dari daftar
-                break;
-            }
-        }
+        productRepository.deleteById(id);
     }
 
 }
