@@ -6,7 +6,7 @@ import java.util.UUID;
 
 @Getter @Setter
 public class Product {
-    private final String productId = UUID.randomUUID().toString(); // Default value untuk productId
+    private String productId = UUID.randomUUID().toString(); // Default value untuk productId
     private String productName;
     private int productQuantity;
 }
