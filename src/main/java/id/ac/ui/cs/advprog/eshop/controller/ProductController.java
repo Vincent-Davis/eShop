@@ -32,10 +32,6 @@ public class ProductController {
 
     @PostMapping("/create")
     public String createProductPost(@ModelAttribute Product product, Model model) {
-        if (product.getProductId() == null || product.getProductId().isEmpty()) {
-            product.setProductId(UUID.randomUUID().toString()); // Berikan ID unik
-        }
-
         service.create(product);
         return "redirect:list";
     }
