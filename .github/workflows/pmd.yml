@@ -8,6 +8,10 @@ on:
     branches:
       - '**'
 
+permissions:
+  contents: read
+
+
 jobs:
   analyze-code:
     runs-on: ubuntu-latest
