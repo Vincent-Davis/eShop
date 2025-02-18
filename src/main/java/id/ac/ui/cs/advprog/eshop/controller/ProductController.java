@@ -19,7 +19,7 @@ public class ProductController {
 
     @GetMapping("/")
     public String createHomePage() {
-        return "homePage";
+        return "HomePage";
     }
 
 
@@ -27,7 +27,7 @@ public class ProductController {
     public String createProductPage(Model model) {
         Product product = new Product();
         model.addAttribute("product", product);
-        return "createProduct";
+        return "CreateProduct";
     }
 
     @PostMapping("/create")
@@ -40,14 +40,14 @@ public class ProductController {
     public String productListPage(Model model) {
         List<Product> allProducts = service.findAll();
         model.addAttribute("products", allProducts);
-        return "productList";
+        return "ProductList";
     }
 
     @GetMapping("/edit/{id}") // Menampilkan form edit
     public String editProductPage(@PathVariable String id, Model model) {
         Product product = service.findById(id);
         model.addAttribute("product", product);
-        return "editProduct"; // Arahkan ke halaman edit
+        return "EditProduct"; // Arahkan ke halaman edit
     }
 
     @PostMapping("/edit") // Menyimpan perubahan
