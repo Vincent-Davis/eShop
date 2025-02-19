@@ -7,9 +7,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class EshopApplication {
 
 
-    private EshopApplication() {
-        // PMD Fix : This utility class has a non-private constructor
-    }
+    // private EshopApplication() {
+    //     // PMD Fix : This utility class has a non-private constructor
+    // }
 
     public static void main(String[] args) {
         SpringApplication.run(EshopApplication.class, args);
