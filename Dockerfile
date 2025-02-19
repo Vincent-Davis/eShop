@@ -1,6 +1,8 @@
 FROM docker.io/library/eclipse-temurin:21-jdk-alpine AS builder
 WORKDIR /src/advshop
 COPY . .
+# Berikan izin eksekusi pada gradlew
+RUN chmod +x gradlew
 RUN ./gradlew clean bootJar
 
 FROM docker.io/library/eclipse-temurin:21-jre-alpine AS runner
