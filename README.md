@@ -1,3 +1,25 @@
+# Module 2
+# 1. Fixed code scanning:
+
+1. Security-Policy
+Strategi Perbaikan:
+Saya menambahkan file SECURITY.md di root repository yang menjelaskan kebijakan keamanan proyek, termasuk cara melaporkan kerentanan dan prosedur penanganannya. Hal ini memastikan pengguna dan kontributor mengetahui bagaimana menangani isu keamanan.
+
+2. Unused import 'org.springframework.web.bind.annotation.*'
+Strategi Perbaikan:
+Alih-alih menggunakan import wildcard, saya mengganti dengan import spesifik hanya untuk kelas-kelas yang benar-benar digunakan (misalnya @Controller, @RequestMapping, @GetMapping, @PostMapping, @PathVariable, dan @ModelAttribute). Dengan demikian, kode menjadi lebih jelas dan mengurangi potensi ambiguitas.
+
+3. Unused import 'java.util.UUID'
+Strategi Perbaikan:
+Karena import tersebut tidak digunakan di dalam kode, saya menghapusnya. Hal ini membantu menjaga kebersihan kode dan mencegah import yang tidak perlu.
+
+4. "This utility class has a non-private constructor" (PMD warning di EshopApplication.java)
+Strategi Perbaikan:
+Meskipun PMD menganggap EshopApplication sebagai utility class karena hanya memiliki method statis, kelas ini merupakan entry point aplikasi Spring Boot yang membutuhkan constructor publik agar framework dapat menginstansiasinya dengan benar. Oleh karena itu, daripada mengubah constructor menjadi private (yang akan menyebabkan error saat booting), saya memilih untuk menonaktifkan warning ini dengan menambahkan anotasi @SuppressWarnings("PMD.UseUtilityClass") pada kelas tersebut. Dengan begitu, saya menjaga agar aplikasi tetap berfungsi sambil tetap mengakui peringatan dari PMD.
+
+# 2. Look at your CI/CD workflows (GitHub)/pipelines (GitLab). Do you think the current implementation has met the definition of Continuous Integration and Continuous Deployment? Explain the reasons (minimum 3 sentences)!
+
+Implementasi CI/CD yang ada sudah memenuhi definisi Continuous Integration dan Continuous Deployment. Pertama, setiap push dan pull request memicu workflow CI yang menjalankan unit test dan analisis kode (seperti PMD dan Scorecard), sehingga membantu mendeteksi error dan masalah kualitas kode sejak dini. Kedua, dengan adanya Dockerfile yang terintegrasi dan mekanisme auto-deploy ke Koyeb, setiap perubahan yang sudah di-merge ke branch utama secara otomatis dibangun dan dideploy ke lingkungan produksi. Ketiga, pipeline yang terstruktur dan terotomatisasi ini mengurangi risiko human error, mempercepat feedback loop, serta memastikan bahwa setiap commit dapat diverifikasi secara konsisten sebelum masuk ke produksi.
 # E-Shop Application (Spring Boot)
 
 ## Project Overview
