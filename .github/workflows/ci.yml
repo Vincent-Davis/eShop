@@ -2,6 +2,9 @@
 
 name: Continuous Integration (CI)
 
+permissions:
+  contents: read
+  
 on:
   push:
   pull_request:
