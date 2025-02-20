@@ -1,0 +1,17 @@
+# CODEOWNERS untuk repository eShop
+# Baris-baris berikut menetapkan pemilik kode yang bertanggung jawab untuk meninjau pull request.
+
+# Untuk semua file di repository:
+*       @Vincent-Davis
+
+# Untuk kode sumber utama:
+src/main/java/       @Vincent-Davis
+
+# Untuk controller:
+src/main/java/id/ac/ui/cs/advprog/eshop/controller/   @Vincent-Davis
+
+# Untuk service:
+src/main/java/id/ac/ui/cs/advprog/eshop/service/   @Vincent-Davis
+
+# Untuk konfigurasi, workflow, dan file-file lain di folder .github:
+.github/       @Vincent-Davis
