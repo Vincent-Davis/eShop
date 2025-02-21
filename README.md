@@ -1,22 +1,52 @@
 # Module 2
 # 1. Fixed code scanning:
 
-1. Security-Policy
-Strategi Perbaikan:
-Saya menambahkan file SECURITY.md di root repository yang menjelaskan kebijakan keamanan proyek, termasuk cara melaporkan kerentanan dan prosedur penanganannya. Hal ini memastikan pengguna dan kontributor mengetahui bagaimana menangani isu keamanan.
+Total fixed : 23/30 vulnerability 
+1. Token-Permissions (1 vulnerability)
 
-2. Unused import 'org.springframework.web.bind.annotation.*'
-Strategi Perbaikan:
-Alih-alih menggunakan import wildcard, saya mengganti dengan import spesifik hanya untuk kelas-kelas yang benar-benar digunakan (misalnya @Controller, @RequestMapping, @GetMapping, @PostMapping, @PathVariable, dan @ModelAttribute). Dengan demikian, kode menjadi lebih jelas dan mengurangi potensi ambiguitas.
+Penjelasan: Saya membatasi izin GITHUB_TOKEN secara global (di level top-level) menjadi read-only (contents: read) pada workflow CI agar sesuai prinsip least privilege. Ini mencegah potensi penyalahgunaan token untuk mengirim kode berbahaya.
 
-3. Unused import 'java.util.UUID'
-Strategi Perbaikan:
-Karena import tersebut tidak digunakan di dalam kode, saya menghapusnya. Hal ini membantu menjaga kebersihan kode dan mencegah import yang tidak perlu.
+2. Dependency-Update-Tool (1 vulnerability)
 
-4. "This utility class has a non-private constructor" (PMD warning di EshopApplication.java)
-Strategi Perbaikan:
-Meskipun PMD menganggap EshopApplication sebagai utility class karena hanya memiliki method statis, kelas ini merupakan entry point aplikasi Spring Boot yang membutuhkan constructor publik agar framework dapat menginstansiasinya dengan benar. Oleh karena itu, daripada mengubah constructor menjadi private (yang akan menyebabkan error saat booting), saya memilih untuk menonaktifkan warning ini dengan menambahkan anotasi @SuppressWarnings("PMD.UseUtilityClass") pada kelas tersebut. Dengan begitu, saya menjaga agar aplikasi tetap berfungsi sambil tetap mengakui peringatan dari PMD.
+Penjelasan: Saya menambahkan konfigurasi Dependabot (melalui file .github/dependabot.yml) agar dependensi selalu diperiksa dan diperbarui secara otomatis. Hal ini memastikan bahwa proyek tetap menggunakan versi dependensi yang aman dan terverifikasi.
 
+3. Pinned-Dependencies (10 vulnerability)
+
+Penjelasan: Saya memperbaiki referensi ke image dan GitHub Actions di Dockerfile serta workflow (misalnya, actions/checkout, actions/setup-java, pmd/pmd-github-action, dan github/codeql-action/upload-sarif) dengan mengganti tag versi dengan commit hash spesifik. Pinning dependency ini memastikan bahwa build selalu menggunakan versi yang telah diuji dan tidak berubah sewaktu-waktu.
+
+4. SAST (1 vulnerability)
+
+Penjelasan: Saya mengintegrasikan alat SAST (melalui CodeQL) sehingga setiap commit dan pull request diperiksa terhadap potensi kerentanan. Ini membantu mendeteksi masalah keamanan sejak dini sebelum masuk ke produksi.
+
+5. Security-Policy (1 vulnerability)
+
+Penjelasan: Saya menambahkan file SECURITY.md di root repository yang menjelaskan kebijakan keamanan, termasuk prosedur pelaporan kerentanan. Hal ini meningkatkan kesadaran dan kesiapan proyek dalam menangani isu keamanan.
+
+6. License (1 vulnerability)
+
+Penjelasan: Saya menambahkan file LICENSE (misalnya, lisensi MIT) di root repository, yang mendefinisikan hak cipta dan penggunaan kode, sehingga memberikan kejelasan bagi pengguna dan kontributor.
+
+7. CI-Tests (1 vulnerability)
+
+Penjelasan: Saya memastikan workflow CI melakukan pengujian secara menyeluruh, sehingga setiap perubahan kode diverifikasi dengan unit test sebelum di-merge. Ini membantu menjaga kualitas kode dan mencegah regresi.
+
+8. PMD Warnings (6 vulnerability)
+
+    * "This utility class has a non-private constructor" (2 vulnerability):
+    
+    Penjelasan: Meskipun PMD menganggap EshopApplication sebagai utility class, kelas ini adalah entry point aplikasi Spring Boot. Saya menonaktifkan peringatan ini dengan menambahkan @SuppressWarnings("PMD.UseUtilityClass") agar tetap menjaga fungsionalitas.
+    
+    * "This class has only private constructors and may be final" (1 vulnerability):
+    
+    Penjelasan: Saya menyesuaikan deklarasi konstruktor di EshopApplication dan menonaktifkan peringatan yang tidak relevan dengan kebutuhan bootstrap Spring Boot.
+    
+    * Unused import 'org.springframework.web.bind.annotation.*' (1 vulnerability):
+    
+    Penjelasan: Saya mengganti import wildcard dengan import spesifik untuk kelas-kelas yang benar-benar digunakan, sehingga mengurangi ambiguitas dan menjaga kebersihan kode.
+    
+    * Unused import 'java.util.UUID' (2 vulnerability):
+    
+    Penjelasan: Saya menghapus import java.util.UUID yang tidak digunakan, sehingga mengurangi ketidakakuratan dan menjaga agar kode tetap rapi.
 # 2. Look at your CI/CD workflows (GitHub)/pipelines (GitLab). Do you think the current implementation has met the definition of Continuous Integration and Continuous Deployment? Explain the reasons (minimum 3 sentences)!
 
 Implementasi CI/CD yang ada sudah memenuhi definisi Continuous Integration dan Continuous Deployment. Pertama, setiap push dan pull request memicu workflow CI yang menjalankan unit test dan analisis kode (seperti PMD dan Scorecard), sehingga membantu mendeteksi error dan masalah kualitas kode sejak dini. Kedua, dengan adanya Dockerfile yang terintegrasi dan mekanisme auto-deploy ke Koyeb, setiap perubahan yang sudah di-merge ke branch utama secara otomatis dibangun dan dideploy ke lingkungan produksi. Ketiga, pipeline yang terstruktur dan terotomatisasi ini mengurangi risiko human error dan mempercepat feedback loop. Hal ini memastikan bahwa setiap commit dapat diverifikasi secara konsisten sebelum masuk ke produksi.
