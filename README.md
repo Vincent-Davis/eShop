@@ -1,3 +1,111 @@
+# Module 3
+
+# 1. Penerapan Prinsip SOLID dalam Kode Saya
+
+## 1. SRP (Single Responsibility Principle)
+- **Yang sudah dilakukan:**
+   - Pada kode awal, terjadi pelanggaran SRP karena `CarController` mewarisi `ProductController`, sehingga tanggung jawabnya bercampur.
+   - Saya telah memisahkan controller menjadi tiga kelas berbeda: `HomeController` untuk halaman utama, `ProductController` untuk produk, dan `CarController` untuk mobil. Masing-masing controller hanya menangani satu domain atau fungsi spesifik.
+- **Kesimpulan:**  
+  Karena setiap kelas sekarang hanya memiliki satu alasan untuk berubah, SRP sudah diterapkan.
+
+## 2. OCP (Open/Closed Principle)
+- **Yang sudah dilakukan:**
+   - Saya merancang kode agar modular dengan memisahkan service dan repository berdasarkan entitas.
+   - Jika di masa depan ingin menambahkan entitas baru (misalnya, `Bike`), saya hanya perlu menambahkan kelas baru tanpa harus mengubah kode yang sudah ada.
+- **Kesimpulan:**  
+  Sistem saya terbuka untuk ekstensi (dengan menambah fitur atau entitas baru) namun tertutup untuk modifikasi pada kode yang sudah ada, sehingga OCP sudah diterapkan.
+
+## 3. LSP (Liskov Substitution Principle)
+- **Yang sudah dilakukan:**
+   - Saya menggunakan interface seperti `CarService` sehingga implementasi konkret seperti `CarServiceImpl` dapat dengan mudah digantikan oleh implementasi lain tanpa mengubah perilaku program.
+   - Awalnya, terdapat masalah karena pewarisan yang tidak tepat. Dengan memisahkan controller dan bergantung pada abstraksi (interface), setiap pengganti akan berperilaku sesuai kontrak yang ditetapkan.
+- **Kesimpulan:**  
+  Karena setiap kelas yang mengimplementasikan interface dapat menggantikan satu sama lain tanpa mengganggu fungsionalitas aplikasi, LSP sudah terpenuhi.
+
+## 4. ISP (Interface Segregation Principle)
+- **Yang sudah dilakukan:**
+   - Pada kode awal, interface seperti `CarService` dan `ProductService` sudah cukup kecil dan spesifik untuk entitasnya masing-masing.
+   - Jika diperlukan, saya bisa memecah interface tersebut lebih jauh (misalnya, memisahkan operasi baca dan tulis) agar klien hanya bergantung pada metode yang relevan.
+- **Kesimpulan:**  
+  Karena klien (seperti controller) hanya bergantung pada metode yang memang mereka gunakan, saya sudah menerapkan ISP.
+
+## 5. DIP (Dependency Inversion Principle)
+- **Yang sudah dilakukan:**
+   - Saya telah mengubah service yang awalnya bergantung langsung pada implementasi konkret repository menjadi bergantung pada repository interface (misalnya, `CarRepositoryInterface` dan `ProductRepositoryInterface`).
+   - Dengan cara ini, service saya hanya bergantung pada abstraksi, sehingga jika nantinya implementasi repository diubah, service tidak perlu diubah.
+- **Kesimpulan:**  
+  Karena service saya bergantung pada abstraksi (interface) dan bukan pada detail implementasi, DIP sudah diterapkan.
+
+---
+# 2.  Keuntungan Menerapkan Prinsip SOLID pada Proyek Saya
+
+## 1. Single Responsibility Principle (SRP)
+- **Keuntungan:**
+   - Masing-masing kelas hanya memiliki satu tanggung jawab sehingga kode menjadi lebih mudah dipahami, diuji, dan dipelihara.
+- **Contoh:**
+   - Saya memisahkan controller berdasarkan domain. Misalnya, `CarController` hanya menangani operasi terkait mobil, sedangkan `ProductController` hanya menangani operasi produk. Jika saya perlu mengubah logika pada produk, saya tidak akan mengganggu logika pada mobil.
+
+## 2. Open/Closed Principle (OCP)
+- **Keuntungan:**
+   - Kode terbuka untuk penambahan fitur baru tanpa perlu mengubah kode yang sudah ada.
+- **Contoh:**
+   - Jika saya ingin menambahkan entitas baru seperti `Bike`, saya cukup menambahkan kelas model, service, dan repository baru yang mengimplementasikan interface yang telah ada, tanpa harus memodifikasi kode untuk `CarService` atau `ProductService`.
+
+## 3. Liskov Substitution Principle (LSP)
+- **Keuntungan:**
+   - Implementasi dari suatu interface atau kelas dasar dapat digantikan oleh subclass atau implementasi lain tanpa mengganggu kebenaran dan konsistensi aplikasi.
+- **Contoh:**
+   - Saya menggunakan interface seperti `CarService` sehingga jika suatu saat saya mengganti implementasi `CarServiceImpl` dengan implementasi lain (misalnya `CarServiceEnhanced`), controller yang bergantung pada `CarService` tidak akan terpengaruh dan tetap berfungsi sesuai kontrak yang telah ditetapkan.
+
+## 4. Interface Segregation Principle (ISP)
+- **Keuntungan:**
+   - Klien hanya bergantung pada interface yang relevan dengan kebutuhannya, sehingga tidak perlu mengimplementasikan metode yang tidak digunakan.
+- **Contoh:**
+   - Dalam perbaikan kode, saya memisahkan operasi baca dan tulis untuk entitas `Car` dengan membuat interface terpisah seperti `CarReadService` dan `CarWriteService`. Dengan begitu, controller yang hanya membutuhkan operasi baca tidak perlu mengetahui operasi tulis, sehingga kode menjadi lebih spesifik dan mudah dipahami.
+
+## 5. Dependency Inversion Principle (DIP)
+- **Keuntungan:**
+   - Modul tingkat tinggi (seperti service) tidak bergantung pada implementasi konkrit modul tingkat rendah (seperti repository), melainkan bergantung pada abstraksi (interface). Hal ini membuat kode lebih fleksibel dan mudah diuji.
+- **Contoh:**
+   - Saya telah mengubah service sehingga tidak bergantung langsung pada `CarRepository` atau `ProductRepository` konkrit, melainkan pada interface seperti `CarRepositoryInterface` dan `ProductRepositoryInterface`. Jika nanti saya ingin mengganti logika penyimpanan (misalnya dari penyimpanan in-memory ke database), saya hanya perlu membuat implementasi baru dari interface tersebut tanpa harus mengubah kode di service.
+
+---
+
+# 3. Kerugian Tidak Menerapkan Prinsip SOLID pada Proyek Saya
+
+## 1. Single Responsibility Principle (SRP)
+- **Kerugian:**
+   - Jika satu kelas menangani banyak tanggung jawab, perubahan di satu bagian bisa mempengaruhi bagian lain, menyebabkan kode sulit dipelihara dan diuji.
+- **Contoh:**
+   - Jika `CarController` juga menangani logika produk (seperti pada awalnya ketika terjadi pewarisan dari `ProductController`), maka perubahan pada logika produk dapat menyebabkan bug pada fungsi mobil.
+
+## 2. Open/Closed Principle (OCP)
+- **Kerugian:**
+   - Kode yang tidak terbuka untuk ekstensi mengharuskan saya untuk mengubah kode yang sudah ada saat menambah fitur baru, sehingga meningkatkan risiko munculnya bug.
+- **Contoh:**
+   - Jika saya ingin menambahkan entitas `Bike` dan harus mengubah kode pada `ProductService` atau `CarService` yang sudah ada, maka fitur yang sudah berjalan bisa terpengaruh dan mengakibatkan error.
+
+## 3. Liskov Substitution Principle (LSP)
+- **Kerugian:**
+   - Jika subclass tidak sepenuhnya memenuhi kontrak dari kelas dasarnya, maka penggantian dengan implementasi lain dapat menyebabkan perilaku aplikasi yang tidak konsisten.
+- **Contoh:**
+   - Jika implementasi `CarServiceImpl` tidak sepenuhnya sesuai dengan kontrak `CarService`, maka menggantinya dengan implementasi lain akan mengakibatkan error atau perilaku aplikasi yang tidak terduga pada controller.
+
+## 4. Interface Segregation Principle (ISP)
+- **Kerugian:**
+   - Menggabungkan semua fungsi dalam satu interface besar memaksa klien untuk bergantung pada metode yang tidak relevan dengan kebutuhannya, sehingga membuat kode lebih kompleks dan sulit dipahami.
+- **Contoh:**
+   - Jika saya memiliki satu interface besar yang mencakup operasi baca, tulis, dan validasi, controller yang hanya membutuhkan operasi baca harus mengabaikan operasi tulis dan validasi, yang dapat membuat kode menjadi tidak efisien dan membingungkan.
+
+## 5. Dependency Inversion Principle (DIP)
+- **Kerugian:**
+   - Jika modul tingkat tinggi bergantung langsung pada implementasi konkrit modul tingkat rendah, maka setiap perubahan pada implementasi bawah akan memaksa saya mengubah kode pada modul atas, sehingga menyulitkan pemeliharaan dan pengujian.
+- **Contoh:**
+   - Jika `CarServiceImpl` bergantung langsung pada `CarRepository` konkrit, maka jika saya ingin mengganti repository tersebut (misalnya untuk mendukung database yang berbeda), saya harus mengubah kode di service, yang berpotensi menimbulkan bug dan meningkatkan kompleksitas.
+
+---
+
 # Module 2
 # 1. Fixed code scanning:
 
