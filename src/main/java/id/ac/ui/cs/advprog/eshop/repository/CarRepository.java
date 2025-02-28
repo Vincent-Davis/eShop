@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Repository
-public class CarRepository {
+public class CarRepository implements CarRepositoryInterface {
     static int id = 0;
     private List<Car> carData = new ArrayList<>();
 
@@ -34,7 +34,7 @@ public class CarRepository {
         return null;
     }
 
-    public Car update(String id, Car updatedCar) {
+    public Car update(String id, Car updatedCar)  {
         for (int i = 0; i < carData.size(); i++) {
             Car car = carData.get(i);
             if (car.getCarId().equals(id)) {
