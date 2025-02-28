@@ -63,7 +63,7 @@ class CarServiceImplTest {
     void testUpdate() {
         Car car = new Car();
         car.setCarId("123");
-        doNothing().when(carRepository).update("123", car);
+        when(carRepository.update("123", car)).thenReturn(car);
 
         carService.update("123", car);
         verify(carRepository, times(1)).update("123", car);
