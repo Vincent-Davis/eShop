@@ -143,4 +143,57 @@ class CarRepositoryTest {
         }
         return size;
     }
+
+    @Test
+    void testUpdate_WithNonExistentId_ShouldNotModifyData() {
+        // Arrange
+        Car dummyCar = new Car();
+        dummyCar.setCarId("dummy-123");
+        dummyCar.setCarName("Original");
+        carRepository.create(dummyCar);
+
+        Car updatedCar = new Car();
+        updatedCar.setCarName("Updated");
+
+        // Act - Update ID yang tidak ada
+        String nonExistentId = "non-existent-456";
+        Car result = carRepository.update(nonExistentId, updatedCar);
+
+        // Assert
+        assertNull(result, "Harus return null untuk ID tidak valid");
+
+        // Verifikasi data original tidak berubah
+        Car originalCar = carRepository.findById("dummy-123");
+        assertEquals("Original", originalCar.getCarName());
+    }
+    @Test
+    void testFindByIdMultipleItems() {
+        // Buat instance dari CarRepository
+        CarRepository repository = new CarRepository();
+
+        // Buat dua objek Car dengan ID yang berbeda
+        Car car1 = new Car();
+        car1.setCarId("111");
+        car1.setCarName("Mobil A");
+        car1.setCarColor("Merah");
+        car1.setCarQuantity(5);
+
+        Car car2 = new Car();
+        car2.setCarId("123");
+        car2.setCarName("Mobil B");
+        car2.setCarColor("Biru");
+        car2.setCarQuantity(3);
+
+        // Tambahkan kedua mobil ke repository
+        repository.create(car1);
+        repository.create(car2);
+
+        // Panggil findById dengan ID "123"
+        Car foundCar = repository.findById("123");
+
+        // Verifikasi bahwa mobil yang ditemukan adalah car2
+        assertNotNull(foundCar, "Mobil dengan ID '123' harus ditemukan");
+        assertEquals("123", foundCar.getCarId(), "ID mobil yang ditemukan harus '123'");
+        assertEquals("Mobil B", foundCar.getCarName(), "Nama mobil harus 'Mobil B'");
+    }
 }
