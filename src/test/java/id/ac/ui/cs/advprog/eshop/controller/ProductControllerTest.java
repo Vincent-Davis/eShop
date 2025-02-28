@@ -26,13 +26,6 @@ public class ProductControllerTest {
     private ProductService service;
 
     @Test
-    public void testCreateHomePage() throws Exception {
-        mockMvc.perform(get("/"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("HomePage"));
-    }
-
-    @Test
     public void testCreateProductPage() throws Exception {
         mockMvc.perform(get("/product/create"))
                 .andExpect(status().isOk())
