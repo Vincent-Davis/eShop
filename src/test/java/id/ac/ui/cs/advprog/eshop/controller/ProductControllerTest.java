@@ -27,7 +27,7 @@ public class ProductControllerTest {
 
     @Test
     public void testCreateHomePage() throws Exception {
-        mockMvc.perform(get("/product/"))
+        mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("HomePage"));
     }
