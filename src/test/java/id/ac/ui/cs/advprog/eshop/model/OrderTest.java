@@ -38,7 +38,7 @@ public class OrderTest {
 
         assertThrows(IllegalArgumentException.class, () -> {
             Order order = new Order("13525256-012a-4c07-b546-51e0b196d70b",
-                this.products,1708560001, "Safira Sundajat");
+                this.products,1708560000L, "Safira Sundajat");
         });
     }
 
