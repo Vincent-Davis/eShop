@@ -16,11 +16,15 @@ public class OrderRepository {
         int i = 0;
         for (Order savedOrder : orderData) {
             if (savedOrder.getId().equals(order.getId())) {
+                // Hapus order lama
                 orderData.remove(i);
+                // Tambahkan order baru
+                orderData.add(order);
                 return order;
             }
-            i += 1;
+            i++;
         }
+        // Jika belum ada data dengan ID tersebut, langsung tambahkan
         orderData.add(order);
         return order;
     }
@@ -44,4 +48,5 @@ public class OrderRepository {
         return result;
     }
 }
+
 

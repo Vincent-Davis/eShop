@@ -75,13 +75,9 @@ class OrderRepositoryTest {
 
     @Test
     void testSaveUpdate() {
-        // Ambil order pertama (index 0) dari daftar
-        Order order = orders.get(0);
-
-        // Simpan dulu order lama ke repository
+        Order order = orders.get(1);
         orderRepository.save(order);
 
-        // Buat objek order baru dengan status berbeda (misalnya SUCCESS)
         Order newOrder = new Order(
                 order.getId(),
                 order.getProducts(),
@@ -89,19 +85,16 @@ class OrderRepositoryTest {
                 order.getAuthor(),
                 OrderStatus.SUCCESS.getValue()
         );
-
-        // Simpan (update) order baru ke repository
         Order result = orderRepository.save(newOrder);
 
-        // Ambil kembali dari repository berdasarkan ID
-        Order findResult = orderRepository.findById(order.getId());
-
-        // Pastikan data sudah ter-update
+        Order findResult = orderRepository.findById(orders.get(1).getId());
+        assertEquals(order.getId(), result.getId());
         assertEquals(order.getId(), findResult.getId());
         assertEquals(order.getOrderTime(), findResult.getOrderTime());
         assertEquals(order.getAuthor(), findResult.getAuthor());
         assertEquals(OrderStatus.SUCCESS.getValue(), findResult.getStatus());
     }
+
 
     @Test
     void testFindByIdIfFound() {
