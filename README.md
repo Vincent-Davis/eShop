@@ -1,3 +1,20 @@
+# Module 4
+
+## Refleksi TDD Berdasarkan Pertanyaan Reflektif Percival (2017)
+
+Pada penerapan Test-Driven Development (TDD) kali ini, saya merasa prosesnya sangat membantu dalam menjaga fokus pada kebutuhan fungsional sejak awal. Dengan menulis tes terlebih dahulu, saya bisa memastikan bahwa kode yang ditulis benar-benar memenuhi kriteria keberhasilan yang diinginkan. Selain itu, pendekatan ini membuat saya lebih percaya diri saat melakukan refactoring, karena serangkaian tes dapat menjamin bahwa fungsionalitas tidak terpengaruh oleh perubahan kode.
+
+Namun, saya juga menyadari bahwa alur TDD ini masih dapat ditingkatkan. Misalnya, saya perlu lebih teliti dalam menulis tes yang mencakup skenario negatif (unhappy path) agar benar-benar mencerminkan situasi di dunia nyata. Di kesempatan berikutnya, saya akan menambahkan lebih banyak variasi tes, terutama yang berkaitan dengan beban kinerja atau integrasi dengan komponen lain, sehingga kualitas kode semakin baik dan dapat diandalkan.
+
+---
+
+## Refleksi Prinsip F.I.R.S.T. dalam Pembuatan Unit Test
+
+Secara umum, tes yang dibuat telah berusaha mengikuti prinsip F.I.R.S.T. (Fast, Independent, Repeatable, Self-validating, Timely). Tes dijalankan dengan cepat, tidak saling bergantung satu sama lain, dan memiliki hasil yang jelas (lulus atau gagal) tanpa memerlukan pengecekan manual. Selain itu, tes juga ditulis berdekatan dengan waktu penulisan kode (Timely), sehingga kesalahan dapat terdeteksi sejak dini.
+
+Meski begitu, ada beberapa hal yang perlu diperbaiki. Salah satunya adalah memastikan setiap tes benar-benar terisolasi (Independent) dengan meminimalkan penggunaan data atau state bersama. Ke depannya, saya akan lebih disiplin dalam menerapkan teknik _mocking_ atau menyiapkan ulang data di setiap tes, agar tidak terjadi ketergantungan antara satu tes dan tes lainnya. Dengan demikian, setiap tes akan lebih konsisten dan mudah dipelihara.
+
+
 # Module 2
 # 1. Fixed code scanning:
 
