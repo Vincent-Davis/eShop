@@ -3,6 +3,7 @@ package id.ac.ui.cs.advprog.eshop.service;
 import id.ac.ui.cs.advprog.eshop.enums.PaymentStatus;
 import id.ac.ui.cs.advprog.eshop.model.Order;
 import id.ac.ui.cs.advprog.eshop.model.Payment;
+import id.ac.ui.cs.advprog.eshop.model.Product;
 import id.ac.ui.cs.advprog.eshop.repository.PaymentRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,7 +19,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class PaymentServiceTest {
+public class PaymentServiceImplTest {
 
     @InjectMocks
     private PaymentServiceImpl paymentService;
@@ -30,8 +31,17 @@ public class PaymentServiceTest {
 
     @BeforeEach
     void setUp() {
-        // Buat Order dengan status default "WAITING_PAYMENT"
-        order = new Order("order1", new ArrayList<>(), 1708560000L, "Safira");
+        // Karena Order harus memiliki setidaknya 1 produk agar tidak dilempar IllegalArgumentException,
+        // kita buat produk dummy dan masukkan ke dalam daftar produk.
+        List<Product> products = new ArrayList<>();
+        Product dummyProduct = new Product();
+        dummyProduct.setProductId("dummy-001");
+        dummyProduct.setProductName("Dummy Product");
+        dummyProduct.setProductQuantity(1);
+        products.add(dummyProduct);
+
+        // Buat Order dengan daftar produk yang valid dan status default "WAITING_PAYMENT"
+        order = new Order("order1", products, 1708560000L, "Safira");
         order.setStatus("WAITING_PAYMENT");
     }
 
@@ -68,13 +78,11 @@ public class PaymentServiceTest {
     // Positive: Update status Payment menjadi SUCCESS, sehingga Order di-update menjadi SUCCESS
     @Test
     void testSetStatus_Success() {
-        // Pertama, simulasikan pembuatan Payment yang valid
         Map<String, String> paymentData = new HashMap<>();
         paymentData.put("bankName", "BCA");
         paymentData.put("referenceCode", "REF123456");
         when(paymentRepository.save(any(Payment.class))).thenAnswer(invocation -> invocation.getArgument(0));
         Payment payment = paymentService.addPayment(order, "Bank Transfer", paymentData);
-        // Ubah status Payment ke SUCCESS (meskipun sudah SUCCESS)
         Payment updated = paymentService.setStatus(payment, PaymentStatus.SUCCESS.name());
         assertEquals(PaymentStatus.SUCCESS.name(), updated.getStatus());
         assertEquals("SUCCESS", order.getStatus());
@@ -88,9 +96,11 @@ public class PaymentServiceTest {
         paymentData.put("referenceCode", "REF123456");
         when(paymentRepository.save(any(Payment.class))).thenAnswer(invocation -> invocation.getArgument(0));
         Payment payment = paymentService.addPayment(order, "Bank Transfer", paymentData);
-        Payment updated = paymentService.setStatus(payment, "INVALID");
-        assertEquals("INVALID", updated.getStatus());
-        // Order status tetap berdasarkan hasil addPayment (yaitu "SUCCESS")
+        // Karena "INVALID" tidak termasuk PaymentStatus, maka akan dilempar IllegalArgumentException
+        assertThrows(IllegalArgumentException.class, () -> {
+            paymentService.setStatus(payment, "INVALID");
+        });
+        // Order status tetap tidak berubah (tetap "SUCCESS" dari addPayment)
         assertEquals("SUCCESS", order.getStatus());
     }
 
