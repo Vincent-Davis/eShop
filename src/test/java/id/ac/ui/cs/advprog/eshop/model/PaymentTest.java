@@ -1,5 +1,6 @@
 package id.ac.ui.cs.advprog.eshop.model;
 
+import id.ac.ui.cs.advprog.eshop.enums.PaymentStatus;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -14,7 +15,7 @@ public class PaymentTest {
         Map<String, String> data = new HashMap<>();
         data.put("bankName", "BCA");
         data.put("referenceCode", "REF123456");
-        Payment payment = new Payment("pay-001", "Bank Transfer", "SUCCESS", data);
+        Payment payment = new Payment("pay-001", "Bank Transfer", PaymentStatus.SUCCESS.name(), data);
         assertEquals("pay-001", payment.getId());
     }
 
@@ -24,7 +25,7 @@ public class PaymentTest {
         Map<String, String> data = new HashMap<>();
         data.put("bankName", "BCA");
         data.put("referenceCode", "REF123456");
-        Payment payment = new Payment("pay-001", "Bank Transfer", "SUCCESS", data);
+        Payment payment = new Payment("pay-001", "Bank Transfer", PaymentStatus.SUCCESS.name(), data);
         assertEquals("Bank Transfer", payment.getMethod());
     }
 
@@ -34,8 +35,8 @@ public class PaymentTest {
         Map<String, String> data = new HashMap<>();
         data.put("bankName", "BCA");
         data.put("referenceCode", "REF123456");
-        Payment payment = new Payment("pay-001", "Bank Transfer", "SUCCESS", data);
-        assertEquals("SUCCESS", payment.getStatus());
+        Payment payment = new Payment("pay-001", "Bank Transfer", PaymentStatus.SUCCESS.name(), data);
+        assertEquals(PaymentStatus.SUCCESS.name(), payment.getStatus());
     }
 
     // Test 4: Positive - Menguji getter getPaymentData() dengan input valid
@@ -44,7 +45,7 @@ public class PaymentTest {
         Map<String, String> data = new HashMap<>();
         data.put("bankName", "BCA");
         data.put("referenceCode", "REF123456");
-        Payment payment = new Payment("pay-001", "Bank Transfer", "SUCCESS", data);
+        Payment payment = new Payment("pay-001", "Bank Transfer", PaymentStatus.SUCCESS.name(), data);
         assertNotNull(payment.getPaymentData());
         assertEquals("BCA", payment.getPaymentData().get("bankName"));
         assertEquals("REF123456", payment.getPaymentData().get("referenceCode"));
@@ -57,7 +58,7 @@ public class PaymentTest {
         data.put("bankName", "BCA");
         data.put("referenceCode", "REF123456");
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            new Payment("pay-002", "", "REJECTED", data);
+            new Payment("pay-002", "", PaymentStatus.REJECTED.name(), data);
         });
         String expectedMessage = "Method cannot be empty or null";
         String actualMessage = exception.getMessage();
@@ -71,7 +72,7 @@ public class PaymentTest {
         data.put("bankName", "BCA");
         data.put("referenceCode", "REF123456");
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            new Payment("pay-003", null, "REJECTED", data);
+            new Payment("pay-003", null, PaymentStatus.REJECTED.name(), data);
         });
         String expectedMessage = "Method cannot be empty or null";
         String actualMessage = exception.getMessage();
@@ -81,7 +82,7 @@ public class PaymentTest {
     // Test 7: Negative - Jika paymentData adalah null, getter getPaymentData() harus mengembalikan null
     @Test
     public void testGetPaymentData_NullPaymentData() {
-        Payment payment = new Payment("pay-004", "Bank Transfer", "SUCCESS", null);
+        Payment payment = new Payment("pay-004", "Bank Transfer", PaymentStatus.SUCCESS.name(), null);
         assertNull(payment.getPaymentData());
     }
 
@@ -91,11 +92,11 @@ public class PaymentTest {
         Map<String, String> data = new HashMap<>();
         data.put("bankName", "Mandiri");
         data.put("referenceCode", "REF987654");
-        Payment payment = new Payment("pay-005", "Bank Transfer", "SUCCESS", data);
+        Payment payment = new Payment("pay-005", "Bank Transfer", PaymentStatus.SUCCESS.name(), data);
 
         assertEquals("pay-005", payment.getId());
         assertEquals("Bank Transfer", payment.getMethod());
-        assertEquals("SUCCESS", payment.getStatus());
+        assertEquals(PaymentStatus.SUCCESS.name(), payment.getStatus());
         assertNotNull(payment.getPaymentData());
         assertEquals("Mandiri", payment.getPaymentData().get("bankName"));
         assertEquals("REF987654", payment.getPaymentData().get("referenceCode"));
