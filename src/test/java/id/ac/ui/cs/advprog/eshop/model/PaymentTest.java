@@ -6,33 +6,98 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.HashMap;
 import java.util.Map;
 
-class PaymentTest {
+public class PaymentTest {
 
+    // Test 1: Positive - Menguji getter getId() dengan input valid
     @Test
-    void testPaymentCreationSuccess() {
-        // Positive case: semua field valid
+    public void testGetId_Positive() {
         Map<String, String> data = new HashMap<>();
         data.put("bankName", "BCA");
-        data.put("referenceCode", "REF123");
-
-        // Asumsikan Payment seharusnya terbentuk tanpa error
+        data.put("referenceCode", "REF123456");
         Payment payment = new Payment("pay-001", "Bank Transfer", "SUCCESS", data);
-
         assertEquals("pay-001", payment.getId());
-        assertEquals("Bank Transfer", payment.getMethod());
-        assertEquals("SUCCESS", payment.getStatus());
-        assertEquals("BCA", payment.getPaymentData().get("bankName"));
     }
 
+    // Test 2: Positive - Menguji getter getMethod() dengan input valid
     @Test
-    void testPaymentCreationWithEmptyMethod() {
-        // Negative case: method kosong → anggap harus lempar IllegalArgumentException
+    public void testGetMethod_Positive() {
         Map<String, String> data = new HashMap<>();
         data.put("bankName", "BCA");
-        data.put("referenceCode", "REF123");
+        data.put("referenceCode", "REF123456");
+        Payment payment = new Payment("pay-001", "Bank Transfer", "SUCCESS", data);
+        assertEquals("Bank Transfer", payment.getMethod());
+    }
 
-        assertThrows(IllegalArgumentException.class, () -> {
+    // Test 3: Positive - Menguji getter getStatus() dengan input valid
+    @Test
+    public void testGetStatus_Positive() {
+        Map<String, String> data = new HashMap<>();
+        data.put("bankName", "BCA");
+        data.put("referenceCode", "REF123456");
+        Payment payment = new Payment("pay-001", "Bank Transfer", "SUCCESS", data);
+        assertEquals("SUCCESS", payment.getStatus());
+    }
+
+    // Test 4: Positive - Menguji getter getPaymentData() dengan input valid
+    @Test
+    public void testGetPaymentData_Positive() {
+        Map<String, String> data = new HashMap<>();
+        data.put("bankName", "BCA");
+        data.put("referenceCode", "REF123456");
+        Payment payment = new Payment("pay-001", "Bank Transfer", "SUCCESS", data);
+        assertNotNull(payment.getPaymentData());
+        assertEquals("BCA", payment.getPaymentData().get("bankName"));
+        assertEquals("REF123456", payment.getPaymentData().get("referenceCode"));
+    }
+
+    // Test 5: Negative - Mencoba membuat Payment dengan method kosong harus melempar exception
+    @Test
+    public void testPaymentCreation_EmptyMethod_ShouldThrowException() {
+        Map<String, String> data = new HashMap<>();
+        data.put("bankName", "BCA");
+        data.put("referenceCode", "REF123456");
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             new Payment("pay-002", "", "REJECTED", data);
         });
+        String expectedMessage = "Method cannot be empty or null";
+        String actualMessage = exception.getMessage();
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+    // Test 6: Negative - Mencoba membuat Payment dengan method null harus melempar exception
+    @Test
+    public void testPaymentCreation_NullMethod_ShouldThrowException() {
+        Map<String, String> data = new HashMap<>();
+        data.put("bankName", "BCA");
+        data.put("referenceCode", "REF123456");
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            new Payment("pay-003", null, "REJECTED", data);
+        });
+        String expectedMessage = "Method cannot be empty or null";
+        String actualMessage = exception.getMessage();
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+    // Test 7: Negative - Jika paymentData adalah null, getter getPaymentData() harus mengembalikan null
+    @Test
+    public void testGetPaymentData_NullPaymentData() {
+        Payment payment = new Payment("pay-004", "Bank Transfer", "SUCCESS", null);
+        assertNull(payment.getPaymentData());
+    }
+
+    // Test 8: Comprehensive - Uji semua getter sekaligus dengan input valid
+    @Test
+    public void testPayment_AllFields() {
+        Map<String, String> data = new HashMap<>();
+        data.put("bankName", "Mandiri");
+        data.put("referenceCode", "REF987654");
+        Payment payment = new Payment("pay-005", "Bank Transfer", "SUCCESS", data);
+
+        assertEquals("pay-005", payment.getId());
+        assertEquals("Bank Transfer", payment.getMethod());
+        assertEquals("SUCCESS", payment.getStatus());
+        assertNotNull(payment.getPaymentData());
+        assertEquals("Mandiri", payment.getPaymentData().get("bankName"));
+        assertEquals("REF987654", payment.getPaymentData().get("referenceCode"));
     }
 }
