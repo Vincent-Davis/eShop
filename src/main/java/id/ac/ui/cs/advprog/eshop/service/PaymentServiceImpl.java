@@ -15,44 +15,25 @@ public class PaymentServiceImpl implements PaymentService {
     @Autowired
     private PaymentRepository paymentRepository;
 
-    // Mapping untuk mengasosiasikan Payment dengan Order
     private Map<String, Order> paymentOrderMapping = new HashMap<>();
 
     @Override
     public Payment addPayment(Order order, String method, Map<String, String> paymentData) {
-        String bankName = paymentData.get("bankName");
-        String referenceCode = paymentData.get("referenceCode");
-        PaymentStatus status;
-        if (bankName == null || bankName.trim().isEmpty() ||
-                referenceCode == null || referenceCode.trim().isEmpty()) {
-            status = PaymentStatus.REJECTED;
-        } else {
-            status = PaymentStatus.SUCCESS;
-        }
+        PaymentStatus status = determineStatus(paymentData);
         Payment payment = new Payment(UUID.randomUUID().toString(), method, status.name(), paymentData);
         paymentRepository.save(payment);
         paymentOrderMapping.put(payment.getId(), order);
-        if (status == PaymentStatus.SUCCESS) {
-            order.setStatus("SUCCESS");
-        } else {
-            order.setStatus("FAILED");
-        }
+        updateOrderStatus(order, status);
         return payment;
     }
 
     @Override
     public Payment setStatus(Payment payment, String status) {
-        // Mengonversi status string menjadi PaymentStatus enum
         PaymentStatus newStatus = PaymentStatus.valueOf(status);
         payment.setStatus(newStatus);
         Order order = paymentOrderMapping.get(payment.getId());
         if (order != null) {
-            if (newStatus == PaymentStatus.SUCCESS) {
-                order.setStatus("SUCCESS");
-            } else if (newStatus == PaymentStatus.REJECTED) {
-                order.setStatus("FAILED");
-            }
-            // Untuk status INVALID atau lainnya, Order tidak diupdate
+            updateOrderStatus(order, newStatus);
         }
         return paymentRepository.save(payment);
     }
@@ -65,5 +46,26 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public List<Payment> getAllPayments() {
         return paymentRepository.findAll();
+    }
+
+    // Helper method untuk menentukan status berdasarkan paymentData
+    private PaymentStatus determineStatus(Map<String, String> paymentData) {
+        String bankName = paymentData.get("bankName");
+        String referenceCode = paymentData.get("referenceCode");
+        if (bankName == null || bankName.trim().isEmpty() ||
+                referenceCode == null || referenceCode.trim().isEmpty()) {
+            return PaymentStatus.REJECTED;
+        }
+        return PaymentStatus.SUCCESS;
+    }
+
+    // Helper method untuk memperbarui status Order berdasarkan status Payment
+    private void updateOrderStatus(Order order, PaymentStatus status) {
+        if (status == PaymentStatus.SUCCESS) {
+            order.setStatus("SUCCESS");
+        } else if (status == PaymentStatus.REJECTED) {
+            order.setStatus("FAILED");
+        }
+        // Untuk status lain (misal, INVALID), Order tidak diupdate
     }
 }
