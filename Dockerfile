@@ -1,11 +1,11 @@
-FROM docker.io/library/eclipse-temurin:21-jdk-alpine@sha256:cafcfad1d9d3b6e7dd983fa367f085ca1c846ce792da59bcb420ac4424296d56 AS builder
+FROM docker.io/library/eclipse-temurin:25-jdk-alpine@sha256:f4c0b771cfed29902e1dd2e5c183b9feca633c7686fb85e278a0486b03d27369 AS builder
 WORKDIR /src/advshop
 COPY . .
 # Berikan izin eksekusi pada gradlew
 RUN chmod +x gradlew
 RUN ./gradlew clean bootJar
 
-FROM docker.io/library/eclipse-temurin:21-jre-alpine@sha256:4e9ab608d97796571b1d5bbcd1c9f430a89a5f03fe5aa6c093888ceb6756c502 AS runner
+FROM docker.io/library/eclipse-temurin:25-jre-alpine@sha256:0be0f9b8c4c9c55bd97194ed84f0751f639f5712d9e99a45a0d65bf49f57bd08 AS runner
 ARG USER_NAME=app
 ARG USER_UID=1000
 ARG USER_GID=1000
